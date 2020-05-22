@@ -1,0 +1,102 @@
+/*
+ *  Copyright 2020 TWO SIGMA OPEN SOURCE, LLC
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+apply plugin: 'application'
+
+mainClassName = 'com.twosigma.beakerx.groovy.kernel.Groovy'
+
+ext {
+    antlr4Version = "4.5"
+}
+
+configurations {
+    provided
+    antlr
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+    test {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
+}
+
+dependencies {
+    compile group: "com.twosigma", name: "beakerx-kernel-base", version: "$beakerxVersion"
+    compile group: "org.codehaus.groovy", name: "groovy-all", version: "2.5.6"
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: "$antlr4Version"
+    antlr group: 'org.antlr', name: 'antlr4', version: "$antlr4Version"
+
+    testCompile group: "com.twosigma", name: "beakerx-kernel-base-test", version: "$beakerxVersion"
+}
+
+task antlr4_groovy_lexer(type: JavaExec) {
+    main = "org.antlr.v4.Tool"
+    workingDir = "src/main/antlr4/"
+    args = ["GroovyLexer.g4", "-o", "../java/com/twosigma/beakerx/groovy/autocomplete", "-listener", "-no-visitor", "-package", "com.twosigma.beakerx.groovy.autocomplete", "-encoding", "UTF-8"]
+    classpath = configurations.antlr
+}
+task antlr4_groovy_parser(type: JavaExec) {
+    main = "org.antlr.v4.Tool"
+    workingDir = "src/main/antlr4/"
+    args = ["GroovyParser.g4", "-o", "../java/com/twosigma/beakerx/groovy/autocomplete", "-listener", "-no-visitor", "-package", "com.twosigma.beakerx.groovy.autocomplete", "-encoding", "UTF-8"]
+    classpath = configurations.antlr
+}
+compileJava.dependsOn antlr4_groovy_lexer
+compileJava.dependsOn antlr4_groovy_parser
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+}
+
+task realclean
+realclean.dependsOn(clean)
+// should also remove
+// GroovyLexer.java GroovyLexer.tokens GroovyParser.java GroovyParser.tokens
+// GroovyParserBaseListener.java GroovyParserListener.java
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.twosigma'
+            artifactId 'beakerx-kernel-groovy'
+            version "$beakerxVersion"
+            from components.java
+        }
+    }
+}
+
+distZip.dependsOn installDist
+
+task copyDependencies(type: Copy) {
+    from configurations.runtime
+    from jar
+    into new File('../groovy-dist/beakerx/kernel/', 'lib')
+}
+task copyStaticContent(type: Copy) {
+    from '.'
+    into new File('../groovy-dist/beakerx/kernel/', '')
+    include '*.png'
+    include 'kernel.json'
+}
+
+
+jar.finalizedBy copyDependencies
+jar.finalizedBy copyStaticContent
