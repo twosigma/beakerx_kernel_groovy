@@ -1,0 +1,23 @@
+# IntelliJ
+.idea/
+.iml
+
+# Gradle
+.gradle/
+/build/
+*/build/
+
+groovy-dist/beakerx/kernel/*
+
+GroovyLexer.java
+GroovyLexer.tokens
+GroovyParser.java
+GroovyParser.tokens
+GroovyParserBaseListener.java
+GroovyParserListener.java
+
+# Python
+*.py[cod]
+__pycache__/
+groovy-dist/dist
+*.egg-info/
