@@ -1,4 +1,4 @@
-name: beakerx-groovy-kernel
+name: beakerx_groovy_kernel
 channels:
   - conda-forge
 dependencies:
