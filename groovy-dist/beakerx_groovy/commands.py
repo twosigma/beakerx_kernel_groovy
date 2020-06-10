@@ -13,7 +13,7 @@
 # limitations under the License.
 import argparse
 import sys
-import beakerx
+import beakerx_groovy
 from notebook import notebookapp as app
 from .install import install, uninstall
 
@@ -47,7 +47,7 @@ def run_jupyter(jupyter_commands):
 
 def init_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--version', action='version', version=beakerx.__version__)
+    parser.add_argument('--version', action='version', version=beakerx_groovy.__version__)
     parser.set_defaults(func=run_jupyter)
 
     subparsers = parser.add_subparsers()
@@ -56,7 +56,7 @@ def init_parser():
     return parser
 
 
-def parse():
+def parse_kernel_groovy():
     parser = init_parser()
     args, jupyter_commands = parser.parse_known_args()
     if args.func == run_jupyter:

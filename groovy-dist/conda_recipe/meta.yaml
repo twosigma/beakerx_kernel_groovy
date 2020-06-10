@@ -1,4 +1,4 @@
-{% set name = "beakerx-kernel-groovy" %}
+{% set name = "beakerx_kernel_groovy" %}
 {% set version = "1.6.0" %}
 
 package:
@@ -17,7 +17,7 @@ build:
   number: 1
   script: pip install --no-deps .
   entry_points:
-  - beakerx-kernel-groovy = beakerx:run
+  - beakerx_kernel_groovy = beakerx_groovy:run
 
 requirements:
   build:

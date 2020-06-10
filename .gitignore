@@ -2,12 +2,13 @@
 .idea/
 .iml
 
+# Jupyter
+.ipynb_checkpoints/
+
 # Gradle
 .gradle/
 /build/
 */build/
-
-groovy-dist/beakerx/kernel/*
 
 GroovyLexer.java
 GroovyLexer.tokens
@@ -19,5 +20,7 @@ GroovyParserListener.java
 # Python
 *.py[cod]
 __pycache__/
-groovy-dist/dist
 *.egg-info/
+
+groovy-dist/beakerx_groovy/kernel/*
+groovy-dist/dist
