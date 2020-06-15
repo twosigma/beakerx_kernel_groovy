@@ -51,13 +51,13 @@ jobs:
     - name: Update conda package
       shell: bash -l {0}
       run: |
-        cd java-dist
+        cd groovy-dist
         conda env create -n beakerx -f configuration.yml
     - name: Build BeakerX Groovy Kernel
       shell: bash -l {0}
       run: |
         chmod +x gradlew
-        cd java-dist
+        cd groovy-dist
         conda activate beakerx
         pip install -r requirements.txt --verbose
         beakerx_kernel_groovy install
