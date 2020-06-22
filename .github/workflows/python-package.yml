@@ -61,4 +61,9 @@ jobs:
         conda activate beakerx
         pip install -r requirements.txt --verbose
         beakerx_kernel_groovy install
-
+    - name: Publish Test Report
+      uses: scacap/action-surefire-report@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        report_paths: "**/test-results/test/TEST-*.xml"
+      
