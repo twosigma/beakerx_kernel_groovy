@@ -38,7 +38,7 @@ sourceSets {
 
 dependencies {
     compile group: "com.twosigma", name: "beakerx-kernel-base", version: "$beakerxVersion"
-    compile group: "org.codehaus.groovy", name: "groovy-all", version: "2.5.6"
+    compile group: "org.codehaus.groovy", name: "groovy-all", version: "3.0.3"
     compile group: 'org.antlr', name: 'antlr4-runtime', version: "$antlr4Version"
     antlr group: 'org.antlr', name: 'antlr4', version: "$antlr4Version"
 
@@ -66,11 +66,9 @@ jar {
     }
 }
 
-task realclean
-realclean.dependsOn(clean)
-// should also remove
-// GroovyLexer.java GroovyLexer.tokens GroovyParser.java GroovyParser.tokens
-// GroovyParserBaseListener.java GroovyParserListener.java
+clean.doFirst {
+    delete "${rootDir}/groovy-dist/beakerx_groovy/kernel"
+}
 
 publishing {
     publications {
