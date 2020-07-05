@@ -131,7 +131,7 @@ def run_gradle(path=kernel_path, cmd='install', skip_tests=False):
                 return '-Dskip.tests=False'
 
         def run(self):
-            run([('' if sys.platform == 'win32' else './') + 'gradlew', '--no-daemon', cmd,
+            run([('' if sys.platform == 'win32' else './') + 'gradlew', '--no-daemon', 'clean', cmd,
                  self.skip_test_option(skip_tests)], cwd=path)
 
     return Gradle
