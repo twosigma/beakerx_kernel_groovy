@@ -18,6 +18,7 @@ package com.twosigma.beakerx.groovy;
 import com.twosigma.beakerx.AutotranslationService;
 import com.twosigma.beakerx.BeakerXClient;
 import com.twosigma.beakerx.evaluator.BaseEvaluator;
+import com.twosigma.beakerx.evaluator.BxInspectMock;
 import com.twosigma.beakerx.evaluator.ClasspathScanner;
 import com.twosigma.beakerx.evaluator.ClasspathScannerMock;
 import com.twosigma.beakerx.evaluator.EvaluatorTest;
@@ -25,6 +26,7 @@ import com.twosigma.beakerx.evaluator.MagicCommandAutocompletePatternsMock;
 import com.twosigma.beakerx.evaluator.TempFolderFactory;
 import com.twosigma.beakerx.groovy.evaluator.GroovyEvaluator;
 import com.twosigma.beakerx.groovy.kernel.GroovyDefaultVariables;
+import com.twosigma.beakerx.inspect.Inspect;
 import com.twosigma.beakerx.kernel.EvaluatorParameters;
 
 import java.util.HashMap;
@@ -68,16 +70,24 @@ public class TestGroovyEvaluator {
             getKernelParameters(),
             client,
             new MagicCommandAutocompletePatternsMock(),
-            new ClasspathScannerMock());
+            new ClasspathScannerMock(),
+            new BxInspectMock());
     return evaluator;
   }
 
-
-  public static BaseEvaluator groovyEvaluator() {
-    return groovyEvaluator(new ClasspathScannerMock());
+  public static BaseEvaluator groovyEvaluator(Inspect inspect) {
+    return groovyEvaluator(new ClasspathScannerMock(), inspect);
   }
 
   public static BaseEvaluator groovyEvaluator(ClasspathScanner classpathScanner) {
+    return groovyEvaluator(classpathScanner, new BxInspectMock());
+  }
+
+  public static BaseEvaluator groovyEvaluator() {
+    return groovyEvaluator(new ClasspathScannerMock(), new BxInspectMock());
+  }
+
+  public static BaseEvaluator groovyEvaluator(ClasspathScanner classpathScanner, Inspect inspect) {
     GroovyEvaluator evaluator = new GroovyEvaluator(
             "id",
             "sid",
@@ -86,7 +96,8 @@ public class TestGroovyEvaluator {
             getKernelParameters(),
             new EvaluatorTest.BeakexClientTestImpl(),
             new MagicCommandAutocompletePatternsMock(),
-            classpathScanner);
+            classpathScanner,
+            inspect);
     return evaluator;
   }
 
@@ -99,7 +110,8 @@ public class TestGroovyEvaluator {
             getKernelParameters(),
             new EvaluatorTest.BeakexClientTestImpl(),
             new MagicCommandAutocompletePatternsMock(),
-            new ClasspathScannerMock());
+            new ClasspathScannerMock(),
+            new BxInspectMock());
     return evaluator;
   }
 

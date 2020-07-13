@@ -17,6 +17,7 @@ package com.twosigma.beakerx.groovy.kernel;
 
 import com.twosigma.beakerx.BeakerXCommRepository;
 import com.twosigma.beakerx.NamespaceClient;
+import com.twosigma.beakerx.evaluator.BxInspect;
 import com.twosigma.beakerx.evaluator.ClasspathScannerImpl;
 import com.twosigma.beakerx.evaluator.Evaluator;
 import com.twosigma.beakerx.groovy.comm.GroovyCommOpenHandler;
@@ -30,7 +31,6 @@ import com.twosigma.beakerx.kernel.CustomMagicCommandsEmptyImpl;
 import com.twosigma.beakerx.kernel.EvaluatorParameters;
 import com.twosigma.beakerx.kernel.Kernel;
 import com.twosigma.beakerx.kernel.KernelConfigurationFile;
-import com.twosigma.beakerx.kernel.KernelRunner;
 import com.twosigma.beakerx.kernel.KernelSocketsFactoryImpl;
 import com.twosigma.beakerx.kernel.handler.CommOpenHandler;
 import com.twosigma.beakerx.kernel.magic.autocomplete.MagicCommandAutocompletePatternsImpl;
@@ -77,7 +77,8 @@ public class Groovy extends Kernel {
               getEvaluatorParameters(),
               namespaceClient,
               magicCommandTypesFactory.patterns(),
-              new ClasspathScannerImpl());
+              new ClasspathScannerImpl(),
+              new BxInspect(BxInspect.getInspectFile()));
       return new Groovy(id,
               evaluator,
               new Configuration(

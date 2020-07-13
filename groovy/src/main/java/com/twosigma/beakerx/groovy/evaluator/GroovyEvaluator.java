@@ -20,12 +20,14 @@ import com.twosigma.beakerx.TryResult;
 import com.twosigma.beakerx.autocomplete.AutocompleteResult;
 import com.twosigma.beakerx.autocomplete.MagicCommandAutocompletePatterns;
 import com.twosigma.beakerx.evaluator.BaseEvaluator;
+import com.twosigma.beakerx.evaluator.BxInspect;
 import com.twosigma.beakerx.evaluator.ClasspathScanner;
 import com.twosigma.beakerx.evaluator.JobDescriptor;
 import com.twosigma.beakerx.evaluator.TempFolderFactory;
 import com.twosigma.beakerx.evaluator.TempFolderFactoryImpl;
 import com.twosigma.beakerx.groovy.autocomplete.GroovyAutocomplete;
 import com.twosigma.beakerx.groovy.autocomplete.GroovyClasspathScanner;
+import com.twosigma.beakerx.inspect.Inspect;
 import com.twosigma.beakerx.jvm.classloader.BeakerXUrlClassLoader;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
 import com.twosigma.beakerx.jvm.threads.BeakerCellExecutor;
@@ -63,7 +65,8 @@ public class GroovyEvaluator extends BaseEvaluator {
                          EvaluatorParameters evaluatorParameters,
                          BeakerXClient beakerxClient,
                          MagicCommandAutocompletePatterns autocompletePatterns,
-                         ClasspathScanner classpathScanner) {
+                         ClasspathScanner classpathScanner,
+                         Inspect inspect) {
     this(id,
             sId,
             new BeakerCellExecutor("groovy"),
@@ -71,7 +74,8 @@ public class GroovyEvaluator extends BaseEvaluator {
             evaluatorParameters,
             beakerxClient,
             autocompletePatterns,
-            classpathScanner);
+            classpathScanner,
+            inspect);
   }
 
   public GroovyEvaluator(String id,
@@ -81,8 +85,17 @@ public class GroovyEvaluator extends BaseEvaluator {
                          EvaluatorParameters evaluatorParameters,
                          BeakerXClient beakerxClient,
                          MagicCommandAutocompletePatterns autocompletePatterns,
-                         ClasspathScanner classpathScanner) {
-    super(id, sId, cellExecutor, tempFolderFactory, evaluatorParameters, beakerxClient, autocompletePatterns, classpathScanner);
+                         ClasspathScanner classpathScanner,
+                         Inspect inspect) {
+    super(id,
+            sId,
+            cellExecutor,
+            tempFolderFactory,
+            evaluatorParameters,
+            beakerxClient,
+            autocompletePatterns,
+            classpathScanner,
+            inspect);
     reloadClassloader();
     gac = createGroovyAutocomplete(new GroovyClasspathScanner(), groovyClassLoader, imports, autocompletePatterns);
     outDir = envVariablesFilter(outDir, System.getenv());
