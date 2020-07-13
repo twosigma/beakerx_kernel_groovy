@@ -17,11 +17,14 @@
 package com.twosigma.beakerx.groovy.inspect;
 
 import com.twosigma.beakerx.evaluator.BaseEvaluator;
+import com.twosigma.beakerx.evaluator.BxInspect;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
 import com.twosigma.beakerx.inspect.InspectResult;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.FileInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,8 +52,10 @@ public class GroovyInspectTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        groovyEvaluator = TestGroovyEvaluator.groovyEvaluator();
-        groovyEvaluator.getInspect().setInspectFileName("./src/test/resources/beakerx_inspect_test.json");
+        groovyEvaluator = TestGroovyEvaluator.groovyEvaluator(
+                new BxInspect(
+                        new FileInputStream("./src/test/resources/beakerx_inspect_test.json"))
+        );
     }
 
     @AfterClass
