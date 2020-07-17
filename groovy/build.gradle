@@ -22,25 +22,18 @@ ext {
 }
 
 configurations {
-    provided
+    runtimetools
     antlr
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.provided
-    }
-    test {
-        compileClasspath += configurations.provided
-        runtimeClasspath += configurations.provided
-    }
 }
 
 dependencies {
     compile group: "com.twosigma", name: "beakerx-kernel-base", version: "$beakerxVersion"
     compile group: "org.codehaus.groovy", name: "groovy-all", version: "3.0.3"
     compile group: 'org.antlr', name: 'antlr4-runtime', version: "$antlr4Version"
+
     antlr group: 'org.antlr', name: 'antlr4', version: "$antlr4Version"
+
+    runtimetools group: "com.twosigma", name: "beakerx-runtimetools", version: "$beakerxVersion"
 
     testCompile group: "com.twosigma", name: "beakerx-kernel-base-test", version: "$beakerxVersion"
 }
@@ -88,13 +81,20 @@ task copyDependencies(type: Copy) {
     from jar
     into new File('../groovy-dist/beakerx_groovy/kernel/', 'lib')
 }
+jar.finalizedBy copyDependencies
+
 task copyStaticContent(type: Copy) {
     from '.'
     into new File('../groovy-dist/beakerx_groovy/kernel/', '')
     include '*.png'
     include 'kernel.json'
 }
-
-
-jar.finalizedBy copyDependencies
 jar.finalizedBy copyStaticContent
+
+task copyRuntimetools(type: Copy) {
+    from configurations.runtimetools
+    from jar
+    into new File('../groovy-dist/beakerx_groovy/kernel/', 'ext')
+    include 'beakerx-runtimetools*.jar'
+}
+jar.finalizedBy copyRuntimetools
