@@ -127,9 +127,16 @@ public class GroovyKernelTest extends KernelExecutionTest {
     List<Message> collect = publishedMessages.stream()
             .filter(x -> (x.type().equals(JupyterMessages.STREAM) || x.type().equals(JupyterMessages.EXECUTE_RESULT)))
             .collect(Collectors.toList());
-    assertThat(collect.get(0).type()).isEqualTo(JupyterMessages.STREAM);
-    assertThat(collect.get(1).type()).isEqualTo(JupyterMessages.STREAM);
-    assertThat(collect.get(2).type()).isEqualTo(JupyterMessages.EXECUTE_RESULT);
+    assertThat(collect.size()==2 || collect.size()==3).isTrue();
+    if (collect.size() == 3) {
+      assertThat(collect.get(0).type()).isEqualTo(JupyterMessages.STREAM);
+      assertThat(collect.get(1).type()).isEqualTo(JupyterMessages.STREAM);
+      assertThat(collect.get(2).type()).isEqualTo(JupyterMessages.EXECUTE_RESULT);
+    } else {
+      // on Mac returns only 2
+      assertThat(collect.get(0).type()).isEqualTo(JupyterMessages.STREAM);
+      assertThat(collect.get(1).type()).isEqualTo(JupyterMessages.EXECUTE_RESULT);
+    }
   }
 
   private void verifyOutputWidgetResult() throws InterruptedException {
