@@ -6,5 +6,6 @@
   "language": "groovy",
   "env": {
     "PS1": "groovy>"
-  }
+  },
+  "interrupt_mode": "message"
 }
