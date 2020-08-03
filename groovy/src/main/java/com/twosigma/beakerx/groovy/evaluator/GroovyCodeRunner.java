@@ -18,7 +18,6 @@ package com.twosigma.beakerx.groovy.evaluator;
 import com.twosigma.beakerx.TryResult;
 import com.twosigma.beakerx.evaluator.Evaluator;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
-import com.twosigma.beakerx.jvm.object.SimpleEvaluationObject;
 import groovy.lang.Script;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
@@ -64,7 +63,7 @@ class GroovyCodeRunner implements Callable<TryResult> {
     } finally {
       theOutput.clrOutputHandler();
     }
-    return either;
+    return groovyEvaluator.processResult(either);
   }
 
   private TryResult handleError(String scriptName, Throwable e) {
