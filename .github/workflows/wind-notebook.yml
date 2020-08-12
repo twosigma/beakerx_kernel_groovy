@@ -43,7 +43,12 @@ jobs:
       with:
         repository: twosigma/beakerx_kernel_base
         path: beakerx_kernel_base
+    - name: Set Var
+      run: |
+         echo "::set-env name=TMP::$env:USERPROFILE\AppData\Local\Temp"
+         echo "::set-env name=TEMP::$env:USERPROFILE\AppData\Local\Temp"
     - name: Build BeakerX Kernel Base
+      shell: bash -l {0}
       run: |
         cd $GITHUB_WORKSPACE/beakerx_kernel_base
         ./gradlew install
