@@ -1,4 +1,4 @@
-name: Conda build (Ubuntu Notebook)
+name: Conda build (Ubuntu Lab)
 
 on:
   push:
@@ -59,6 +59,7 @@ jobs:
         chmod +x gradlew
         cd groovy-dist
         conda activate beakerx
+        conda install -y -c conda-forge jupyterlab=1
         pip install -r requirements.txt --verbose
         beakerx_kernel_groovy install
     - name: Checkout beakerx_tests repo
@@ -72,7 +73,7 @@ jobs:
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         chmod +x gradlew
         conda activate beakerx
-        python ci_tests.py --app=notebook --tst=groovy.* 
+        python ci_tests.py --app=lab --tst=groovy.* 
     - name: Publish Test Report
       if: ${{ always() }}
       uses: scacap/action-surefire-report@v1
