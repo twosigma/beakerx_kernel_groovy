@@ -56,7 +56,6 @@ jobs:
         cd groovy-dist
         conda activate beakerx
         pip install -r requirements.txt --verbose
-        pip install psutil
         beakerx_kernel_groovy install
     - name: Checkout beakerx_tests repo
       uses: actions/checkout@v2
@@ -68,6 +67,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         conda activate beakerx
+        pip install psutil
         python ci_tests.py --app=notebook --tst=groovy.Groovy* 
     - name: Publish Test Report
       if: ${{ always() }}
