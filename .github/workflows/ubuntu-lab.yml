@@ -66,6 +66,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: twosigma/beakerx_tests
+        ref: vladimir/ci_action
         path: beakerx_tests 
     - name: Run e2e tests (Groovy kernel)
       shell: bash -l {0}
@@ -73,7 +74,8 @@ jobs:
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         chmod +x gradlew
         conda activate beakerx
-        python ci_tests.py --app=lab --tst=groovy.* 
+        pip install psutil
+        python ci_tests.py --app=lab --tst=groovy.Groovy* 
     - name: Publish Test Report
       if: ${{ always() }}
       uses: scacap/action-surefire-report@v1
