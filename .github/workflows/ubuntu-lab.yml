@@ -73,7 +73,7 @@ jobs:
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         chmod +x gradlew
         conda activate beakerx
-        python ci_tests.py --app=lab --tst=groovy.* 
+        python ci_tests.py --app=lab --tst=groovy.Groovy* 
     - name: Publish Test Report
       if: ${{ always() }}
       uses: scacap/action-surefire-report@v1
