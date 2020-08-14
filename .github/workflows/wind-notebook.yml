@@ -62,7 +62,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: twosigma/beakerx_tests
-        ref: vladimir/ci_action
         path: beakerx_tests 
     - name: Run e2e tests (Groovy kernel)
       shell: bash -l {0}
