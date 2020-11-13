@@ -59,14 +59,14 @@ jobs:
         chmod +x gradlew
         conda activate beakerx_all
         pip install psutil
-        python ci_tests.py --app=notebook --tst=python.Groovy*
+        python ci_tests.py --app=notebook --tst=groovy.Groovy*
     - name: Run e2e tests (Widget)
       shell: bash -l {0}
       run: |
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         chmod +x gradlew
         conda activate beakerx_all
-        python ci_tests.py --app=notebook --tst=python.Widget*
+        python ci_tests.py --app=notebook --tst=groovy.Widget*
     - name: Publish Test Report
       if: ${{ always() }}
       uses: scacap/action-surefire-report@v1
