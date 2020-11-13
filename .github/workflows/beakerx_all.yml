@@ -1,0 +1,75 @@
+name: beakerx_all groovy (Ubuntu Notebook)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11  
+    - name: Cache gradle
+      uses: actions/cache@v2
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-  
+    - name: Set up Conda
+      uses: goanpeca/setup-miniconda@v1
+      with:
+        miniconda-version: "latest"
+    - name: Verify conda version
+      shell: bash -l {0}
+      run: conda --version
+    - name: Fonts list
+      shell: bash
+      run: fc-list
+    - name: Create conda env
+      shell: bash -l {0}
+      run: |
+        conda create -y --name beakerx_all python=3.7.5
+        conda activate beakerx_all
+        conda install -y -c conda-forge openjdk=11.0.1
+        conda install -y -c conda-forge notebook
+    - name: Install beakerx_all
+      shell: bash -l {0}
+      run: |
+        conda activate beakerx_all
+        conda install -y -c beakerx beakerx_all
+        conda list
+    - name: Checkout beakerx_tests repo
+      uses: actions/checkout@v2
+      with:
+        repository: twosigma/beakerx_tests
+        path: beakerx_tests 
+    - name: Run e2e tests (Kernal)
+      shell: bash -l {0}
+      run: |
+        cd $GITHUB_WORKSPACE/beakerx_tests/autotests
+        chmod +x gradlew
+        conda activate beakerx_all
+        pip install psutil
+        python ci_tests.py --app=notebook --tst=python.Groovy*
+    - name: Run e2e tests (Widget)
+      shell: bash -l {0}
+      run: |
+        cd $GITHUB_WORKSPACE/beakerx_tests/autotests
+        chmod +x gradlew
+        conda activate beakerx_all
+        python ci_tests.py --app=notebook --tst=python.Widget*
+    - name: Publish Test Report
+      if: ${{ always() }}
+      uses: scacap/action-surefire-report@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        report_paths: "**/test-results/test/TEST-*.xml"
