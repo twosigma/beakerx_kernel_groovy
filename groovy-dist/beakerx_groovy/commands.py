@@ -14,7 +14,6 @@
 import argparse
 import sys
 import beakerx_groovy
-from notebook import notebookapp as app
 from .install import install, uninstall
 
 
@@ -41,14 +40,10 @@ def uninstall_subparser(subparser):
                                 action='store_true')
     return subparser
 
-def run_jupyter(jupyter_commands):
-    app.launch_new_instance(jupyter_commands)
-
 
 def init_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--version', action='version', version=beakerx_groovy.__version__)
-    parser.set_defaults(func=run_jupyter)
 
     subparsers = parser.add_subparsers()
     install_subparser(subparsers)
@@ -59,9 +54,7 @@ def init_parser():
 def parse_kernel_groovy():
     parser = init_parser()
     args, jupyter_commands = parser.parse_known_args()
-    if args.func == run_jupyter:
-        args.func(jupyter_commands)
-    elif not jupyter_commands:
+    if not jupyter_commands:
         args.func(args)
     else:
         parser.parse_args(jupyter_commands)
