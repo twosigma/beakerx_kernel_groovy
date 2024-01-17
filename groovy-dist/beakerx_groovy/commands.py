@@ -14,7 +14,7 @@
 import argparse
 import sys
 import beakerx_groovy
-from notebook import notebookapp as app
+from jupyter_server import serverapp as app
 from .install import install, uninstall
 
 
