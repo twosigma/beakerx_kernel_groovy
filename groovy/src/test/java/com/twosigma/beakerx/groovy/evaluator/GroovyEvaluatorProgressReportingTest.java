@@ -27,9 +27,9 @@ import com.twosigma.beakerx.kernel.KernelManager;
 import com.twosigma.beakerx.kernel.msg.MessageCreator;
 import com.twosigma.beakerx.message.Message;
 import com.twosigma.beakerx.widget.IntProgress;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -48,14 +48,14 @@ public class GroovyEvaluatorProgressReportingTest {
   private BaseEvaluator groovyEvaluator;
   private KernelTest groovyKernel;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     groovyEvaluator = TestGroovyEvaluator.groovyEvaluator(new NamespaceClient(TestGroovyEvaluator.autotranslationService(), new DefaultBeakerXJsonSerializer(), new BeakerXCommRepositoryMock()));
     groovyKernel = new KernelTest(GROOVY_EVALUATOR_PROGRESS_REPORTING_TEST, groovyEvaluator, MessageCreator.get(), new MagicCommandConfigurationMock());
     KernelManager.register(groovyKernel);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     KernelManager.register(null);
     groovyKernel.exit();

@@ -27,11 +27,11 @@ import com.twosigma.beakerx.handler.CompleteHandler;
 import com.twosigma.beakerx.kernel.EvaluatorParameters;
 import com.twosigma.beakerx.message.Message;
 import org.apache.commons.collections.map.HashedMap;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class GroovyCompleteHandlerTest {
   private CompleteHandler completeHandler;
   private static GroovyKernelMock groovyKernel;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() {
     GroovyEvaluator groovyEvaluator = new GroovyEvaluator(
             "id",
@@ -61,17 +61,17 @@ public class GroovyCompleteHandlerTest {
     groovyKernel = new GroovyKernelMock("sid", groovyEvaluator);
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     completeHandler = new CompleteHandler(groovyKernel);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     groovyKernel.clearSentMessages();
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() throws Exception {
     groovyKernel.exit();
   }

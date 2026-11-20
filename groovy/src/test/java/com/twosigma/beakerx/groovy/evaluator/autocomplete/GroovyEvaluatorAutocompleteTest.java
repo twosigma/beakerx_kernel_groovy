@@ -18,9 +18,9 @@ package com.twosigma.beakerx.groovy.evaluator.autocomplete;
 import com.twosigma.beakerx.autocomplete.AutocompleteResult;
 import com.twosigma.beakerx.evaluator.BaseEvaluator;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;
 
@@ -30,12 +30,12 @@ public class GroovyEvaluatorAutocompleteTest {
 
   private static BaseEvaluator groovyEvaluator;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     groovyEvaluator = TestGroovyEvaluator.groovyEvaluator();
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() throws Exception {
     groovyEvaluator.exit();
   }

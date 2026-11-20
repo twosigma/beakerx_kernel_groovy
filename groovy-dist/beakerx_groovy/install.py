@@ -16,10 +16,10 @@
 
 import json
 import os
-import pkg_resources
-import shutil
 import subprocess
+import sys
 import tempfile
+from importlib import resources
 
 from string import Template
 
@@ -28,28 +28,12 @@ def _kernel_name():
     return "groovy"
 
 
-def _base_classpath_for(kernel):
-    return pkg_resources.resource_filename(
-        'beakerx_groovy', os.path.join('kernel', kernel))
-
-
-def _classpath():
-    return pkg_resources.resource_filename(
-        'beakerx_groovy', os.path.join('kernel', 'lib', '*'))
-
-
-def _copy_tree(src, dst):
-    if os.path.exists(dst):
-        shutil.rmtree(dst)
-    shutil.copytree(src, dst)
-
-
 def _install_kernels():
-    base_classpath = _classpath()
-    classpath = json.dumps(os.pathsep.join([base_classpath]))
-    template = pkg_resources.resource_string(
-        'beakerx_groovy', os.path.join('kernel', 'kernel.json'))
-    contents = Template(template.decode()).substitute(PATH=classpath)
+    package = resources.files('beakerx_groovy')
+    kernel_root = package / 'kernel'
+    template = (kernel_root / 'kernel.json').read_text()
+    classpath = json.dumps(os.pathsep.join([str(kernel_root / 'lib' / '*')]))
+    contents = Template(template).substitute(PATH=classpath)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         kernel_dir = os.path.join(tmpdir, _kernel_name())
@@ -57,7 +41,7 @@ def _install_kernels():
         with open(os.path.join(kernel_dir, 'kernel.json'), 'w') as f:
             f.write(contents)
         install_cmd = [
-            'jupyter', 'kernelspec', 'install',
+            sys.executable, '-m', 'jupyter', 'kernelspec', 'install',
             '--sys-prefix', '--replace',
             '--name', _kernel_name(), kernel_dir
         ]
@@ -66,7 +50,7 @@ def _install_kernels():
 
 def _uninstall_kernels():
     uninstall_cmd = [
-        'jupyter', 'kernelspec', 'remove', _kernel_name(), '-y', '-f'
+        sys.executable, '-m', 'jupyter', 'kernelspec', 'remove', _kernel_name(), '-y', '-f'
     ]
     try:
         subprocess.check_call(uninstall_cmd)

@@ -33,9 +33,9 @@ import com.twosigma.beakerx.widget.DOMWidget;
 import com.twosigma.beakerx.widget.Text;
 import com.twosigma.beakerx.widget.Widget;
 import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,14 +51,14 @@ public class InteractiveTest {
   private BaseEvaluator groovyEvaluator;
   private KernelTest groovyKernel;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     groovyEvaluator = TestGroovyEvaluator.groovyEvaluator();
     groovyKernel = new KernelTest("1", groovyEvaluator, MessageCreator.get(), new MagicCommandConfigurationMock());
     KernelManager.register(groovyKernel);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     KernelManager.register(null);
     groovyKernel.exit();

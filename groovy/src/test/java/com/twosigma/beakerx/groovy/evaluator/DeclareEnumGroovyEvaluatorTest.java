@@ -21,9 +21,9 @@ import com.twosigma.beakerx.evaluator.SimpleEvaluationObjectFactory;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
 import com.twosigma.beakerx.jvm.object.SimpleEvaluationObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static com.twosigma.beakerx.MessageFactorTest.commMsg;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,12 +32,12 @@ public class DeclareEnumGroovyEvaluatorTest {
 
   private static BaseEvaluator groovyEvaluator;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     groovyEvaluator = TestGroovyEvaluator.groovyEvaluator();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     groovyEvaluator.exit();
   }

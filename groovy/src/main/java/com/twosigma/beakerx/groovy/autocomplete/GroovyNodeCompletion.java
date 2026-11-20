@@ -45,16 +45,16 @@ public class GroovyNodeCompletion extends GroovyAbstractListener {
   public void exitClassNameExpression(ClassNameExpressionContext ctx) {
     if (ctx.getStart().getStartIndex() < cursor && ctx.getStop().getStopIndex() + 1 >= cursor) {
       if (ctx.getText().contains(".")) {
-        addQuery(classUtils.expandExpression(ctx.getText(), registry, classUtils.DO_STATIC), AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(classUtils.expandExpression(ctx.getText(), registry, classUtils.DO_STATIC), queryStart(ctx));
         // complete with standard groovy extension functions
         AutocompleteCandidate c = new AutocompleteCandidate(GroovyCompletionTypes.STDFUNCS, ctx.getText().substring(ctx.getText().lastIndexOf(".") + 1));
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
         completeClassFromPath(ctx);
       } else {
         AutocompleteCandidate c = new AutocompleteCandidate(GroovyCompletionTypes.NAME, ctx.getText());
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
         c = new AutocompleteCandidate(GroovyCompletionTypes.CUSTOM_TYPE, ctx.getText());
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
       }
     }
   }
@@ -63,7 +63,7 @@ public class GroovyNodeCompletion extends GroovyAbstractListener {
     String text = ctx.getText();
     text = text.substring(text.lastIndexOf(".") + 1, text.length());
     AutocompleteCandidate cName = new AutocompleteCandidate(GroovyCompletionTypes.FQ_TYPE, text);
-    addQuery(cName, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(cName, queryStart(ctx));
   }
 
   @Override
@@ -84,7 +84,7 @@ public class GroovyNodeCompletion extends GroovyAbstractListener {
               ctx.getParent().getParent() != null && ctx.getParent().getParent() instanceof StatementContext &&
               ctx.getParent().getParent().getChild(0).equals(ctx.getParent())) {
         AutocompleteCandidate c = new AutocompleteCandidate(GroovyCompletionTypes.TOPLEVEL, ctx.getText());
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
       }
 
       // check out for implements and/or extends
@@ -99,16 +99,16 @@ public class GroovyNodeCompletion extends GroovyAbstractListener {
 
 //        // try to expand this as a path expression
       if (ctx.getText().contains(".")) {
-        addQuery(classUtils.expandExpression(ctx.getText(), registry, classUtils.DO_NON_STATIC), AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(classUtils.expandExpression(ctx.getText(), registry, classUtils.DO_NON_STATIC), queryStart(ctx));
         // complete with standard groovy extension functions
         AutocompleteCandidate c = new AutocompleteCandidate(GroovyCompletionTypes.STDFUNCS, ctx.getText().substring(ctx.getText().lastIndexOf(".") + 1));
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
-        addQuery(classUtils.expandExpression(ctx.getText(), registry, classUtils.DO_ALL), AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
+        addQuery(classUtils.expandExpression(ctx.getText(), registry, classUtils.DO_ALL), queryStart(ctx));
       } else {
         AutocompleteCandidate c = new AutocompleteCandidate(GroovyCompletionTypes.NAME, ctx.getText());
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
         c = new AutocompleteCandidate(GroovyCompletionTypes.CUSTOM_TYPE, ctx.getText());
-        addQuery(c, AutocompleteGroovyResult.getStartIndex(ctx));
+        addQuery(c, queryStart(ctx));
       }
     }
   }
@@ -199,6 +199,9 @@ public class GroovyNodeCompletion extends GroovyAbstractListener {
 //        }
 //      }
       String t = removeEOF(ctx.getText());
+      if (t.isEmpty()) {
+        return;
+      }
       addQuery(classUtils.expandExpression(t, registry, classUtils.DO_ALL), calculateStartIndex(t, ctx));
       String[] txtv = splitByDot(t);
       AutocompleteCandidate c2 = new AutocompleteCandidate(GroovyCompletionTypes.FQ_TYPE, txtv);
@@ -222,6 +225,24 @@ public class GroovyNodeCompletion extends GroovyAbstractListener {
   }
 
   private int calculateStartIndex(String t, ParserRuleContext ctx) {
-    return AutocompleteGroovyResult.getStartIndex(ctx) + (t.endsWith(".") ? 1 : 0);
+    if (t.endsWith(".")) {
+      return t.length();
+    }
+    int lastDot = t.lastIndexOf('.');
+    int lastWhitespace = -1;
+    for (int i = t.length() - 1; i >= 0; i--) {
+      if (Character.isWhitespace(t.charAt(i))) {
+        lastWhitespace = i;
+        break;
+      }
+    }
+    return Math.max(lastDot, lastWhitespace) + 1;
+  }
+
+  private int queryStart(ParserRuleContext ctx) {
+    int parserStart = AutocompleteGroovyResult.getStartIndex(ctx);
+    String source = text.substring(0, cursor);
+    int lastDot = source.lastIndexOf('.');
+    return lastDot >= 0 ? lastDot + 1 : parserStart;
   }
 }

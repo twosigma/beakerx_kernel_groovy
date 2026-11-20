@@ -22,7 +22,7 @@ within a Python package.
 """
 import functools
 import os
-import pipes
+import shlex
 import sys
 from distutils import log
 from setuptools import Command
@@ -40,7 +40,7 @@ if sys.platform == 'win32':
     from subprocess import list2cmdline
 else:
     def list2cmdline(cmd_list):
-        return ' '.join(map(pipes.quote, cmd_list))
+        return ' '.join(map(shlex.quote, cmd_list))
 
 # ---------------------------------------------------------------------------
 # Top Level Variables

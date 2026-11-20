@@ -29,9 +29,9 @@ import com.twosigma.beakerx.kernel.KernelManager;
 import com.twosigma.beakerx.kernel.msg.MessageCreator;
 import com.twosigma.beakerx.message.Message;
 import com.twosigma.beakerx.widget.BeakerxPlot;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +46,7 @@ public class GroovyOutputContainerTest {
   private KernelTest groovyKernel;
   private EvaluationObjectFactory evaluationObjectFactory;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     BaseEvaluator evaluator = TestGroovyEvaluator.groovyEvaluator();
     groovyKernel = new KernelTest("GroovyOutputContainerTest", evaluator, MessageCreator.get(), new MagicCommandConfigurationMock());
@@ -56,7 +56,7 @@ public class GroovyOutputContainerTest {
     evaluationObjectFactory = SimpleEvaluationObjectFactory.get();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     KernelManager.register(null);
     groovyKernel.exit();
