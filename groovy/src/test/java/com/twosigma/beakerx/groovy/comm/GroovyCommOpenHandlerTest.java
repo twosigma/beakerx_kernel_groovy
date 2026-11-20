@@ -22,8 +22,8 @@ import com.twosigma.beakerx.handler.Handler;
 import com.twosigma.beakerx.kernel.comm.TargetNamesEnum;
 import com.twosigma.beakerx.message.Message;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroovyCommOpenHandlerTest {
 
@@ -31,7 +31,7 @@ public class GroovyCommOpenHandlerTest {
   private GroovyCommOpenHandler commOpenHandler;
   private String targetName = TargetNamesEnum.KERNEL_CONTROL_CHANNEL.getTargetName();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     kernel = new GroovyKernelMock();
     commOpenHandler = new GroovyCommOpenHandler(kernel);

@@ -61,10 +61,25 @@ public class GroovyAutocomplete extends AutocompleteServiceBeakerx {
   @Override
   protected AutocompleteResult doAutocomplete(String txt, int cur) {
     try {
+      AutocompleteResult incompleteClassKeyword = autocompleteIncompleteClassKeyword(txt, cur);
+      if (incompleteClassKeyword != null) {
+        return incompleteClassKeyword;
+      }
       return tryFindAutocomplete(txt, cur, groovyClassLoader, imports);
     } catch (Exception e) {
       return new AutocompleteResult(new ArrayList<>(), 0);
     }
+  }
+
+  private AutocompleteResult autocompleteIncompleteClassKeyword(String text, int cursor) {
+    String source = text.substring(0, cursor);
+    if (!source.matches("(?s).*\\bclass\\s+\\w+\\s+(exten|implemen)$")) {
+      return null;
+    }
+    int start = source.lastIndexOf(' ') + 1;
+    String fragment = source.substring(start);
+    String keyword = fragment.startsWith("exten") ? "extends" : "implements";
+    return new AutocompleteResult(List.of(keyword), start);
   }
 
   private AutocompleteResult tryFindAutocomplete(String txt, int cur, ClassLoader l, Imports imports) {
@@ -105,9 +120,25 @@ public class GroovyAutocomplete extends AutocompleteServiceBeakerx {
 	ret.addAll(reflectionCompletions);
 
     if (!ret.isEmpty()) {
-      return new AutocompleteResult(ret, getStartIndex(extractor, extractor2, extractor3));
+      return new AutocompleteResult(ret, getCursorStart(txt, cur));
     }
     return findAutocompleteResult(txt, cur, cu);
+  }
+
+  private int getCursorStart(String text, int cursor) {
+    int start = cursor;
+    while (start > 0) {
+      char previous = text.charAt(start - 1);
+      if (Character.isWhitespace(previous) || isExpressionDelimiter(previous)) {
+        break;
+      }
+      start--;
+    }
+    return start;
+  }
+
+  private boolean isExpressionDelimiter(char value) {
+    return ".;,()[]{}:=+-*/%<>!&|?".indexOf(value) >= 0;
   }
 
   private AutocompleteResult findAutocompleteResult(String txt, int cur, ClassUtils cu) {

@@ -17,7 +17,7 @@
 package com.twosigma.beakerx.groovy.evaluator;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GroovyEvaluatorAutotranslationTest extends GroovyEvaluatorTest {
 
@@ -30,12 +30,12 @@ public class GroovyEvaluatorAutotranslationTest extends GroovyEvaluatorTest {
   }
 
   //TODO : After NamespaceClient.get() will be implemented - remove expected exception
-  @Test(expected = RuntimeException.class)
+  @Test
   public void parseGetBeakerObjectScript_returnBeakerObjectValue() {
-    //when
-    parseClassFromScript("beakerx.x = 10 ");
-    Object result = parseClassFromScript("beakerx.x");
-    //then
-    Assertions.assertThat(result instanceof Number).isTrue();
+    org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> {
+      parseClassFromScript("beakerx.x = 10 ");
+      Object result = parseClassFromScript("beakerx.x");
+      Assertions.assertThat(result instanceof Number).isTrue();
+    });
   }
 }

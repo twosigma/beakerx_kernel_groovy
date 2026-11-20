@@ -16,7 +16,7 @@
 package com.twosigma.beakerx.groovy.examples;
 import com.twosigma.beakerx.table.TableDisplay;
 import com.twosigma.beakerx.message.Message;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static com.twosigma.beakerx.MessageFactoryTest.getExecuteRequestMessage;

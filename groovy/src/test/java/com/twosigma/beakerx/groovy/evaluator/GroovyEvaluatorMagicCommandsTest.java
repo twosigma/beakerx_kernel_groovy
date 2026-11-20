@@ -21,9 +21,9 @@ import com.twosigma.beakerx.evaluator.ClasspathScanner;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
 import com.twosigma.beakerx.kernel.PathToJar;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,12 +34,12 @@ public class GroovyEvaluatorMagicCommandsTest {
 
   private static BaseEvaluator groovyEvaluator;
   private static EvaluationObjectFactoryMock evaluationObjectFactory = new EvaluationObjectFactoryMock();
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     groovyEvaluator = TestGroovyEvaluator.groovyEvaluator();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     groovyEvaluator.exit();
   }

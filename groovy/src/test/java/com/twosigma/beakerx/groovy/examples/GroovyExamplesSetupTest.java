@@ -30,9 +30,9 @@ import com.twosigma.beakerx.kernel.CustomMagicCommandsEmptyImpl;
 import com.twosigma.beakerx.kernel.KernelRunner;
 import com.twosigma.beakerx.message.Message;
 import com.twosigma.beakerx.widget.Widget;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -40,7 +40,7 @@ import java.util.Map;
 import static com.twosigma.beakerx.KernelCloseKernelAction.NO_ACTION;
 import static com.twosigma.beakerx.evaluator.EvaluatorTest.getCacheFolderFactory;
 import static com.twosigma.beakerx.widget.TestWidgetUtils.getState;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class GroovyExamplesSetupTest {
 
@@ -48,7 +48,7 @@ public abstract class GroovyExamplesSetupTest {
   protected static KernelSocketsServiceTest kernelSocketsService;
   private static Thread kernelThread;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws Exception {
     String sessionId = "sessionIdWidget";
     BaseEvaluator evaluator = TestGroovyEvaluator.groovyEvaluator();
@@ -70,23 +70,23 @@ public abstract class GroovyExamplesSetupTest {
     kernelSocketsService.waitForSockets();
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() throws Exception {
     kernelSocketsService.shutdown();
     kernelThread.join();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     kernelSocketsService.clear();
   }
 
   public void assertMessageExists(final String errorMessage, final String viewNameValue) {
-    assertTrue(errorMessage,
+    assertTrue(
             kernelSocketsService.getPublishedMessages().stream()
                     .filter(x -> isWidget(x, viewNameValue))
                     .findFirst()
-                    .isPresent());
+                    .isPresent(), errorMessage);
   }
 
   private boolean isWidget(Message message, String viewNameValue) {

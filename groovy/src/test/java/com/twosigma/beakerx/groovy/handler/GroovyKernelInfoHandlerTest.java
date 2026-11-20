@@ -21,11 +21,11 @@ import com.twosigma.beakerx.message.Header;
 import com.twosigma.beakerx.message.Message;
 import com.twosigma.beakerx.message.MessageFactoryMock;
 import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -38,23 +38,23 @@ public class GroovyKernelInfoHandlerTest {
   private static GroovyKernelMock kernel;
   private static GroovyKernelInfoHandler handler;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     kernel = new GroovyKernelMock();
     handler = new GroovyKernelInfoHandler(kernel);
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     message = MessageFactoryMock.createMessage();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     kernel.clearSentMessages();
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDownClass() throws Exception {
     kernel.exit();
   }

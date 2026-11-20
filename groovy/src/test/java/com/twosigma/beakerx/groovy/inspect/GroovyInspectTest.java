@@ -20,9 +20,9 @@ import com.twosigma.beakerx.evaluator.BaseEvaluator;
 import com.twosigma.beakerx.evaluator.BxInspect;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
 import com.twosigma.beakerx.inspect.InspectResult;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 
@@ -50,7 +50,7 @@ public class GroovyInspectTest {
 
     private static BaseEvaluator groovyEvaluator;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
         groovyEvaluator = TestGroovyEvaluator.groovyEvaluator(
                 new BxInspect(
@@ -58,7 +58,7 @@ public class GroovyInspectTest {
         );
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() throws Exception {
         groovyEvaluator.exit();
     }

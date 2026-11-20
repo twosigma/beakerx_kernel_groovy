@@ -28,8 +28,8 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class GroovyEvaluatorTest {
   static Binding scriptBinding;
   static ImportCustomizer icz = new ImportCustomizer();
 
-  @BeforeClass
+  @BeforeAll
   public static void initClassStubData() throws IOException {
     GroovyDefaultVariables var = new GroovyDefaultVariables();
     HashMap<String, Object> params = new HashMap<>();
@@ -73,7 +73,7 @@ public class GroovyEvaluatorTest {
     KernelManager.register(groovyKernel);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() throws Exception {
     KernelManager.register(null);
     groovyKernel.exit();

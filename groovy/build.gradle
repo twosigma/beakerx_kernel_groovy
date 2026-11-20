@@ -15,10 +15,12 @@
  */
 apply plugin: 'application'
 
-mainClassName = 'com.twosigma.beakerx.groovy.kernel.Groovy'
+application {
+    mainClass = 'com.twosigma.beakerx.groovy.kernel.Groovy'
+}
 
 ext {
-    antlr4Version = "4.5"
+    antlr4Version = "4.13.2"
 }
 
 configurations {
@@ -27,25 +29,50 @@ configurations {
 }
 
 dependencies {
-    compile group: "com.twosigma", name: "beakerx-kernel-base", version: "$beakerxVersion"
-    compile group: "org.codehaus.groovy", name: "groovy-all", version: "3.0.3"
-    compile group: 'org.antlr', name: 'antlr4-runtime', version: "$antlr4Version"
+    implementation "com.twosigma:beakerx-kernel-base:$beakerxVersion"
+    implementation("org.apache.groovy:groovy-all:6.0.0") {
+        exclude group: 'junit', module: 'junit'
+    }
+    implementation "org.antlr:antlr4-runtime:$antlr4Version"
+    implementation 'commons-beanutils:commons-beanutils:1.11.0'
 
-    antlr group: 'org.antlr', name: 'antlr4', version: "$antlr4Version"
+    antlr "org.antlr:antlr4:$antlr4Version"
 
-    runtimetools group: "com.twosigma", name: "beakerx-runtimetools", version: "$beakerxVersion"
+    runtimetools "com.twosigma:beakerx-runtimetools:$beakerxVersion"
 
-    testCompile group: "com.twosigma", name: "beakerx-kernel-base-test", version: "$beakerxVersion"
+    testImplementation "com.twosigma:beakerx-kernel-base-test:$beakerxVersion"
+    testImplementation platform('org.junit:junit-bom:6.1.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'net.serenity-bdd:serenity-junit5:5.4.2'
+    testImplementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.38.0'
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags 'e2e'
+    }
+}
+
+tasks.register('serenityTest', Test) {
+    description = 'Runs the Jupyter/Groovy browser acceptance tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'e2e'
+    }
+    shouldRunAfter test
 }
 
 task antlr4_groovy_lexer(type: JavaExec) {
-    main = "org.antlr.v4.Tool"
+    mainClass = "org.antlr.v4.Tool"
     workingDir = "src/main/antlr4/"
     args = ["GroovyLexer.g4", "-o", "../java/com/twosigma/beakerx/groovy/autocomplete", "-listener", "-no-visitor", "-package", "com.twosigma.beakerx.groovy.autocomplete", "-encoding", "UTF-8"]
     classpath = configurations.antlr
 }
 task antlr4_groovy_parser(type: JavaExec) {
-    main = "org.antlr.v4.Tool"
+    mainClass = "org.antlr.v4.Tool"
     workingDir = "src/main/antlr4/"
     args = ["GroovyParser.g4", "-o", "../java/com/twosigma/beakerx/groovy/autocomplete", "-listener", "-no-visitor", "-package", "com.twosigma.beakerx.groovy.autocomplete", "-encoding", "UTF-8"]
     classpath = configurations.antlr
@@ -55,7 +82,7 @@ compileJava.dependsOn antlr4_groovy_parser
 
 jar {
     manifest {
-        attributes "Main-Class": "$mainClassName"
+        attributes "Main-Class": "com.twosigma.beakerx.groovy.kernel.Groovy"
     }
 }
 
@@ -66,9 +93,9 @@ clean.doFirst {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId 'com.twosigma'
-            artifactId 'beakerx-kernel-groovy'
-            version "$beakerxVersion"
+            groupId = 'com.twosigma'
+            artifactId = 'beakerx-kernel-groovy'
+            version = "$beakerxVersion"
             from components.java
         }
     }
@@ -77,7 +104,7 @@ publishing {
 distZip.dependsOn installDist
 
 task copyDependencies(type: Copy) {
-    from configurations.runtime
+    from configurations.runtimeClasspath
     from jar
     into new File('../groovy-dist/beakerx_groovy/kernel/', 'lib')
 }

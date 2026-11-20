@@ -19,8 +19,8 @@ import com.twosigma.beakerx.evaluator.BaseEvaluator;
 import com.twosigma.beakerx.evaluator.EvaluatorBaseTest;
 import com.twosigma.beakerx.evaluator.TempFolderFactory;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 public class GroovyBaseEvaluatorTest extends EvaluatorBaseTest {
 
@@ -30,12 +30,12 @@ public class GroovyBaseEvaluatorTest extends EvaluatorBaseTest {
     super();
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     evaluator = TestGroovyEvaluator.groovyEvaluator();
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() throws Exception {
     evaluator.exit();
   }

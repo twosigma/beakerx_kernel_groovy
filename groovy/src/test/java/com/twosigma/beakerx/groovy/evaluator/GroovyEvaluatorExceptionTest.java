@@ -20,61 +20,61 @@ import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingPropertyException;
 import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GroovyEvaluatorExceptionTest extends GroovyEvaluatorTest {
 
-  @Test(expected = MultipleCompilationErrorsException.class)
+  @Test
   public void parseNotExistingClassScript_throwMultipleCompilationErrorsException() {
-    //when
-    parseClassFromScript("def plot = new NotExistPlot()");
+    org.junit.jupiter.api.Assertions.assertThrows(MultipleCompilationErrorsException.class,
+        () -> parseClassFromScript("def plot = new NotExistPlot()"));
   }
 
-  @Test(expected = MissingPropertyException.class)
+  @Test
   public void parseNotExistingPropertyScript_throwMissingPropertyException() {
-    //when
-    parseClassFromScript("def plot = new Plot() \n " + "plot << line");
+    org.junit.jupiter.api.Assertions.assertThrows(MissingPropertyException.class,
+        () -> parseClassFromScript("def plot = new Plot() \n " + "plot << line"));
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void parseNullObjectScript_throwNullPointerException() {
-    //when
-    parseClassFromScript("def plot = new Plot() \n" + "Line line = null \n " + "plot << line");
+    org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class,
+        () -> parseClassFromScript("def plot = new Plot() \n" + "Line line = null \n " + "plot << line"));
   }
 
-  @Test(expected = GroovyCastException.class)
+  @Test
   public void parseCastWrongClassScript_throwGroovyCastException() {
-    //when
-    parseClassFromScript("def plot = new Plot() \n" + "Line line = (Line) Plot ");
+    org.junit.jupiter.api.Assertions.assertThrows(GroovyCastException.class,
+        () -> parseClassFromScript("def plot = new Plot() \n" + "Line line = (Line) Plot "));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void parseIllegalArgumentScript_throwIllegalArgumentException() {
-    //when
-    parseClassFromScript("def plot = new Plot() \n" + "plot.setYBound(Arrays.asList(1, 2, 3)) ");
+    org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+        () -> parseClassFromScript("def plot = new Plot() \n" + "plot.setYBound(Arrays.asList(1, 2, 3)) "));
   }
 
-  @Test(expected = NumberFormatException.class)
+  @Test
   public void parseWrongNumberFormatScript_throwNumberFormatException() {
-    //when
-    parseClassFromScript("def intval = Color.decode(\"FF00FF\"); ");
+    org.junit.jupiter.api.Assertions.assertThrows(NumberFormatException.class,
+        () -> parseClassFromScript("def intval = Color.decode(\"FF00FF\"); "));
   }
 
-  @Test(expected = IndexOutOfBoundsException.class)
+  @Test
   public void parseIndexOutOfBoundsScript_throwIndexOutOfBoundsException() {
-    //when
-    parseClassFromScript("def arr = new ArrayList() \n" + "arr.get(5) ");
+    org.junit.jupiter.api.Assertions.assertThrows(IndexOutOfBoundsException.class,
+        () -> parseClassFromScript("def arr = new ArrayList() \n" + "arr.get(5) "));
   }
 
-  @Test(expected = GroovyRuntimeException.class)
+  @Test
   public void parseNotExistingConstructorScript_throwGroovyRuntimeException() {
-    //when
-    parseClassFromScript("def plot = new Plot(123)");
+    org.junit.jupiter.api.Assertions.assertThrows(GroovyRuntimeException.class,
+        () -> parseClassFromScript("def plot = new Plot(123)"));
   }
 
-  @Test(expected = ArithmeticException.class)
+  @Test
   public void parseDivisionByZeroScript_throwArithmeticException() {
-    //when
-    parseClassFromScript("1/0 ");
+    org.junit.jupiter.api.Assertions.assertThrows(ArithmeticException.class,
+        () -> parseClassFromScript("1/0 "));
   }
 }

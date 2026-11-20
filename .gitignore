@@ -16,6 +16,8 @@ GroovyParser.java
 GroovyParser.tokens
 GroovyParserBaseListener.java
 GroovyParserListener.java
+GroovyLexer.interp
+GroovyParser.interp
 
 # Python
 *.py[cod]

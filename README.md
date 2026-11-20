@@ -28,11 +28,26 @@ Please check the main repositoy for further informations:
 [beakerx](https://github.com/twosigma/beakerx)
 
 
-### Build and Install (linux and mac)
+### Build and Install (Java 17+)
 
 ```
 ./gradlew build
 ```
+
+The kernel uses Apache Groovy 6.0.0 and targets Java 25 by default. Use
+`-PjavaVersion=17` for the Java 17 compatibility build.
+
+### Browser Acceptance Test
+
+After installing the kernel into the active Python environment, run the
+Serenity browser test from the Airlock desktop environment:
+
+```
+DISPLAY=:99 ./gradlew :groovy:serenityTest
+```
+
+The Java Serenity test starts JupyterLab, opens a Groovy notebook in Chromium,
+enters `6 * 7`, executes the cell, and asserts the visible result is `42`.
 
 ### Kernel Install in Conda (linux and mac)
 

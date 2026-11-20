@@ -19,9 +19,9 @@ import com.twosigma.beakerx.TryResult;
 import com.twosigma.beakerx.evaluator.BaseEvaluator;
 import com.twosigma.beakerx.groovy.TestGroovyEvaluator;
 import com.twosigma.beakerx.jvm.object.EvaluationObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,13 +30,13 @@ public class DeclareClassGroovyEvaluatorTest {
   private static BaseEvaluator groovyEvaluator;
   private static EvaluationObjectFactoryMock evaluationObjectFactory;
 
-  @BeforeClass
+  @BeforeAll
   public static void setUpClass() throws Exception {
     groovyEvaluator = TestGroovyEvaluator.groovyEvaluator();
     evaluationObjectFactory = new EvaluationObjectFactoryMock();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     groovyEvaluator.exit();
   }
